@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @RestController
 @RequestMapping("brand")
@@ -35,17 +35,18 @@ public class BrandController {
         Brand Updated = brandService.update(id,brand);
         return ResponseEntity.ok(Updated);
     }
-    @GetMapping
-    public ResponseEntity<?> getAllBand(){
-        List<Brand> list = brandService.getAllBrand();
-        return ResponseEntity.ok(list);
-    }
-//    @GetMapping("name")
-//    public ResponseEntity<?> getAllByName(@RequestParam("name") String name){
-//        List<BrandDTO> list = brandService.getBrandByName(name)
-//                .stream()
-//                .map(BrandMapper.INSTANCE::toBrandDTO)
-//                .toList();
+
+    //    @GetMapping
+//    public ResponseEntity<?> getAllBand(){
+//        List<Brand> list = brandService.getBrandByName();
 //        return ResponseEntity.ok(list);
 //    }
+    @GetMapping
+    public ResponseEntity<?> getAllByName(@RequestParam Map<String, String> params) {
+        List<BrandDTO> list = brandService.getBrandByName(params)
+                .stream()
+                .map(BrandMapper.INSTANCE::toBrandDTO)
+                .toList();
+        return ResponseEntity.ok(list);
+    }
 }
