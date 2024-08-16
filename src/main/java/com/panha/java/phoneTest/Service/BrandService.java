@@ -1,6 +1,7 @@
 package com.panha.java.phoneTest.Service;
 
 import com.panha.java.phoneTest.Entity.Brand;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Map;
@@ -12,5 +13,5 @@ public interface BrandService{
 //    List<Brand> getAllBrand();
     List<Brand> getBrandByName(String name);
 
-    List<Brand> getBrandByName(Map<String, String> params);
+    Page<Brand> getBrandByName(Map<String, String> params);
 }

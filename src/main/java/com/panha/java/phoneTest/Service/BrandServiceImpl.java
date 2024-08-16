@@ -6,7 +6,10 @@ import com.panha.java.phoneTest.Exception.ResourceException;
 import com.panha.java.phoneTest.Repository.BrandRepository;
 import com.panha.java.phoneTest.Specification.BrandFilter;
 import com.panha.java.phoneTest.Specification.BrandSpec;
+import com.panha.java.phoneTest.Util.PageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,6 +46,8 @@ public class BrandServiceImpl implements BrandService{
     public List<Brand> getBrandByName(String name) {
         return brandRepository.findByName(name);
     }
+
+    /*
     @Override
     public List<Brand> getBrandByName(Map<String, String> params) {
         BrandFilter brandFilter = new BrandFilter();
@@ -56,5 +61,30 @@ public class BrandServiceImpl implements BrandService{
         }
         BrandSpec brandSpec = new BrandSpec(brandFilter);
         return brandRepository.findAll(brandSpec);
+    }
+     */
+    @Override
+    public Page<Brand> getBrandByName(Map<String, String> params) {
+        BrandFilter brandFilter = new BrandFilter();
+        if (params.containsKey("name")) {
+            String name = params.get("name");
+            brandFilter.setName(name);
+        }
+        if (params.containsKey("id")) {
+            String id = params.get("id");
+            brandFilter.setId(Integer.parseInt(id));
+        }
+        int pageLimit = PageUtil.DEFAULT_PAGE_LIMIT;
+        if (params.containsKey(PageUtil.PAGE_LIMIT)) {
+            pageLimit = Integer.parseInt(params.get(PageUtil.PAGE_LIMIT));
+        }
+        int pageNumber = PageUtil.DEFAULT_PAGE_NUMBER;
+        if (params.containsKey(PageUtil.PAGE_NUMBER)) {
+            pageNumber = Integer.parseInt(params.get(PageUtil.PAGE_NUMBER));
+        }
+        BrandSpec brandSpec = new BrandSpec(brandFilter);
+        Pageable pageable = PageUtil.getPageable(pageNumber, pageLimit);
+
+        return brandRepository.findAll(brandSpec, pageable);
     }
 }

@@ -3,12 +3,13 @@ package com.panha.java.phoneTest.Controller;
 import com.panha.java.phoneTest.Entity.Brand;
 import com.panha.java.phoneTest.Service.BrandService;
 import com.panha.java.phoneTest.dto.BrandDTO;
+import com.panha.java.phoneTest.dto.PageDTO;
 import com.panha.java.phoneTest.mapper.BrandMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -43,10 +44,15 @@ public class BrandController {
 //    }
     @GetMapping
     public ResponseEntity<?> getAllByName(@RequestParam Map<String, String> params) {
+        Page<Brand> page = brandService.getBrandByName(params);
+        PageDTO pageDTO = new PageDTO(page);
+        /*
         List<BrandDTO> list = brandService.getBrandByName(params)
                 .stream()
                 .map(BrandMapper.INSTANCE::toBrandDTO)
                 .toList();
-        return ResponseEntity.ok(list);
+
+         */
+        return ResponseEntity.ok(pageDTO);
     }
 }
